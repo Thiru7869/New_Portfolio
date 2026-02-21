@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Thirumala Narasimha Poluru — Full Stack Developer & Data Science Enthusiast.">
+  <meta name="author" content="Thirumala Narasimha Poluru">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#060b14" id="themeColorMeta">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+  <title>Thirumala Narasimha Poluru | Full Stack Developer & Data Scientist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="preloader-inner">
+    <div class="preloader-ring"></div>
+    <span class="preloader-monogram">TNP</span>
+  </div>
+</div>
+
+<div class="scroll-progress-bar" id="scrollProgress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
+</button>
+
+<div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+<!-- CERT MODAL — Fixed Full-Screen Preview -->
+<div class="cert-modal" id="certModal" role="dialog" aria-modal="true" aria-label="Certificate viewer">
+  <div class="cert-modal-backdrop" id="certModalBackdrop"></div>
+  <div class="cert-modal-inner">
+    <button class="cert-modal-close" id="certModalClose" aria-label="Close certificate">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="cert-modal-img-wrap">
+      <img class="cert-modal-img" id="certModalImg" src="" alt="Certificate" />
+    </div>
+    <p class="cert-modal-caption" id="certModalCaption"></p>
+  </div>
+</div>
+
+<div class="menu-backdrop" id="menuBackdrop" aria-hidden="true"></div>
+
+<div class="command-palette" id="commandPalette" role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="command-inner">
+    <div class="command-header">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="commandInput" placeholder="Search sections, skills, projects…" autocomplete="off" spellcheck="false" aria-label="Search">
+      <kbd class="command-esc" id="commandClose">ESC</kbd>
+    </div>
+    <div class="command-results" id="commandResults"></div>
+  </div>
+</div>
+<div class="command-backdrop" id="commandBackdrop" aria-hidden="true"></div>
+
+<!-- NAVBAR -->
+<header class="navbar" id="navbar" role="banner">
+  <div class="container">
+    <div class="nav-wrapper">
+      <a href="#home" class="logo" aria-label="Home">
+        <span class="logo-thiru">Thiru</span><span class="logo-sep"> / </span><span class="logo-portfolio">Portfolio</span>
+      </a>
+      <nav class="nav-menu" id="navMenu" role="navigation" aria-label="Main navigation">
+        <!-- Mobile close button -->
+        <button class="nav-close-btn" id="navCloseBtn" aria-label="Close menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <a href="#home" class="nav-link" data-section="home">Home</a>
+        <a href="#about" class="nav-link" data-section="about">About</a>
+        <a href="#education" class="nav-link" data-section="education">Education</a>
+        <a href="#skills" class="nav-link" data-section="skills">Skills</a>
+        <a href="#internships" class="nav-link" data-section="internships">Internships</a>
+        <a href="#projects" class="nav-link" data-section="projects">Projects</a>
+        <a href="#experience" class="nav-link" data-section="experience">Experience</a>
+        <a href="#contact" class="nav-link" data-section="contact">Contact</a>
+        <a href="#rating" class="nav-link" data-section="rating">Rate</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="cmd-trigger" id="cmdTrigger" aria-label="Open command palette (Ctrl+K)" title="Search (Ctrl+K)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <kbd>⌘K</kbd>
+        </button>
+        <label class="theme-switch" aria-label="Toggle dark/light theme">
+          <input type="checkbox" id="themeToggle" role="switch" aria-checked="false">
+          <span class="theme-track">
+            <span class="theme-thumb"></span>
+            <span class="theme-sun">☀️</span>
+            <span class="theme-moon">🌙</span>
+          </span>
+        </label>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false" aria-controls="navMenu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero section" id="home" aria-label="Hero">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-grid"></div>
+    <div class="hero-orb hero-orb-1"></div>
+    <div class="hero-orb hero-orb-2"></div>
+    <!-- Section transition wave -->
+    <div class="section-wave-bottom">
+      <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,30 C300,60 900,0 1200,30 L1200,60 L0,60 Z" fill="var(--bg-1)"/></svg>
+    </div>
+  </div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-eyebrow reveal-up">
+        <span class="eyebrow-dot"></span>
+        <span>Available for opportunities</span>
+      </div>
+      <h1 class="hero-title reveal-up">
+        <span class="hero-greeting">Hello, I'm</span>
+        <span class="hero-name" id="heroName">Thirumala<br>Narasimha Poluru</span>
+      </h1>
+      <div class="hero-role-wrap reveal-up">
+        <p class="hero-role">Full Stack Developer <span class="role-divider">·</span> Data Science Enthusiast</p>
+      </div>
+      <p class="hero-description reveal-up">
+        Transforming complex problems into elegant digital solutions through innovative
+        development, data-driven insights, and a relentless passion for learning.
+      </p>
+      <div class="hero-cta reveal-up">
+        <a href="#contact" class="btn btn-primary">
+          <span>Hire Me</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <button class="btn btn-secondary btn-cv" id="downloadCVBtn" aria-label="Download CV" type="button"></button>
+      </div>
+      <div class="hero-chips reveal-up">
+        <span class="hero-chip">⚡ Full Stack</span>
+        <span class="hero-chip">📊 Data Science</span>
+        <span class="hero-chip">☁️ Cloud</span>
+        <span class="hero-chip">🔐 Security</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about section" id="about" aria-label="About me">
+  <div class="container">
+    <div class="section-label reveal-up">About Me</div>
+    <h2 class="section-title reveal-up">Who I Am</h2>
+    <div class="about-grid">
+      <div class="about-photo-col reveal-left">
+        <div class="about-photo-wrap">
+          <img src="https://raw.githubusercontent.com/Thiru7869/New_Portfolio/main/Profile-.jpeg" alt="Thirumala Narasimha Poluru" class="about-photo" loading="lazy" onerror="this.src='https://via.placeholder.com/280x280/0a1120/4f8ef7?text=TNP'">
+          <div class="about-photo-border"></div>
+        </div>
+        <div class="about-stats">
+          <div class="stat-item"><span class="stat-num counter" data-target="8">0</span><span class="stat-num">+</span><p>Internships</p></div>
+          <div class="stat-item"><span class="stat-num counter" data-target="25">0</span><span class="stat-num">+</span><p>Projects</p></div>
+          <div class="stat-item"><span class="stat-num counter" data-target="3">0</span><span class="stat-num">+</span><p>Years</p></div>
+        </div>
+      </div>
+      <div class="about-text-col reveal-right">
+        <h3 class="about-subtitle">Professional Summary</h3>
+        <p class="about-intro">I'm a passionate Full Stack Developer and aspiring Data Scientist with a strong foundation in Computer Science Engineering, currently pursuing an MBA in Data Science.</p>
+        <p class="about-body">From Venkatagiri, I've cultivated deep expertise in both frontend and backend technologies, cloud computing, and cybersecurity. My technical stack includes React, Node.js, Python, Java, and AWS.</p>
+
+        <!-- Expandable humanized about section -->
+        <div class="about-expand-wrap">
+          <button class="about-expand-btn" id="aboutExpandBtn" aria-expanded="false">
+            <span class="about-expand-label">Read More About Me</span>
+            <svg class="about-expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="about-expanded" id="aboutExpanded" aria-hidden="true">
+            <div class="about-expanded-inner">
+              <p>Growing up in Venkatagiri — a small, vibrant town in Andhra Pradesh — I was always the kid who wanted to understand <em>how things worked</em>. That curiosity led me to computers, and computers led me to code. What started as tinkering with basic scripts eventually grew into a full-blown passion for building real-world software.</p>
+              <p>During my B.Tech at AITS Tirupati, I didn't just study Computer Science — I <em>lived</em> it. I completed seven industry internships, participated in national hackathons, and built projects that went beyond academic requirements. Each experience taught me something the classroom couldn't: how to ship, how to collaborate, and how to debug at 2 AM with a deadline looming.</p>
+              <p>Today, as I pursue my MBA in Data Science at Amity University, I'm bridging the gap between raw technical skill and strategic business thinking. I believe the most impactful engineers are those who understand not just the code, but the problem it solves and the people it serves.</p>
+              <p>When I'm not coding, you'll find me exploring the latest in machine learning research, contributing to open-source projects, or helping students on Chegg as a certified Subject Matter Expert. I genuinely enjoy sharing knowledge — because I know how transformative good mentorship can be.</p>
+              <div class="about-personal-facts">
+                <div class="fact-item"><span class="fact-icon">🏡</span><span>From Venkatagiri, AP, India</span></div>
+                <div class="fact-item"><span class="fact-icon">🎯</span><span>Goal: Build tech that creates real human impact</span></div>
+                <div class="fact-item"><span class="fact-icon">📖</span><span>Currently deep-diving into LLMs & Generative AI</span></div>
+                <div class="fact-item"><span class="fact-icon">☕</span><span>Fueled by coffee, curiosity & clean code</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="about-subtitle" style="margin-top:28px;">Core Competencies</h3>
+        <ul class="competencies-list">
+          <li><span class="comp-icon">🎨</span><div><strong>UI/UX Design</strong><p>Creating intuitive, responsive interfaces</p></div></li>
+          <li><span class="comp-icon">⚡</span><div><strong>Performance Optimization</strong><p>Building fast, efficient applications</p></div></li>
+          <li><span class="comp-icon">🏗️</span><div><strong>Frontend Architecture</strong><p>Scalable React & modern JavaScript</p></div></li>
+          <li><span class="comp-icon">🌐</span><div><strong>Full Stack Development</strong><p>End-to-end application development</p></div></li>
+          <li><span class="comp-icon">🔄</span><div><strong>Version Control</strong><p>Expert Git/GitHub collaboration</p></div></li>
+          <li><span class="comp-icon">👥</span><div><strong>Team Collaboration</strong><p>Agile methodologies & communication</p></div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section class="education section" id="education" aria-label="Education">
+  <div class="container">
+    <div class="section-label reveal-up">Academic Journey</div>
+    <h2 class="section-title reveal-up">Education</h2>
+    <div class="education-timeline">
+
+      <div class="edu-item reveal-up">
+        <div class="edu-marker"></div>
+        <div class="edu-card">
+          <div class="edu-card-header">
+            <div class="edu-icon">🎓</div>
+            <div class="edu-main">
+              <span class="edu-year">Present — Ongoing</span>
+              <h3 class="edu-degree">MBA in Data Science</h3>
+              <p class="edu-school">Amity University, Noida</p>
+            </div>
+            <button class="edu-toggle" aria-expanded="false" aria-label="Toggle education details">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </div>
+          <p class="edu-summary">Pursuing advanced studies combining business acumen with analytics, machine learning, and data-driven decision making.</p>
+          <div class="edu-tags"><span>Data Analytics</span><span>Machine Learning</span><span>Business Intelligence</span></div>
+          <div class="edu-details" aria-hidden="true">
+            <div class="edu-details-inner">
+              <div class="edu-detail-row">
+                <div class="edu-detail-block">
+                  <h4>Key Courses</h4>
+                  <ul>
+                    <li>Big Data Analytics</li>
+                    <li>Machine Learning & Deep Learning</li>
+                    <li>Business Statistics</li>
+                    <li>Strategic Management</li>
+                    <li>Data Mining & Warehousing</li>
+                  </ul>
+                </div>
+                <div class="edu-detail-block">
+                  <h4>Skills Developed</h4>
+                  <ul>
+                    <li>Advanced Python for data science</li>
+                    <li>R programming</li>
+                    <li>Tableau & Power BI</li>
+                    <li>MBA-level business strategy</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="edu-detail-note">🎯 Actively working on thesis combining deep learning and business forecasting models.</p>
+              <div class="edu-humanized">
+                <h4>My Experience Here</h4>
+                <p>Joining Amity University after completing my B.Tech felt like stepping into a completely different dimension of learning. Here, I'm not just writing algorithms — I'm learning to ask <em>why</em> those algorithms matter to a business. The intersection of data science and MBA thinking has fundamentally changed how I approach problem-solving. I now evaluate every technical solution through a lens of business value, scalability, and real-world impact.</p>
+                <p>The collaborative environment at Amity has also introduced me to peers from diverse professional backgrounds — marketers, finance professionals, and supply chain experts — all trying to harness the power of data. Working in mixed teams has sharpened my communication skills and taught me to translate complex technical concepts for non-technical stakeholders.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="edu-item reveal-up">
+        <div class="edu-marker"></div>
+        <div class="edu-card">
+          <div class="edu-card-header">
+            <div class="edu-icon">💻</div>
+            <div class="edu-main">
+              <span class="edu-year">2020 — 2024</span>
+              <h3 class="edu-degree">B.Tech in Computer Science Engineering</h3>
+              <p class="edu-school">Annamacharya Institute of Technology and Sciences, Tirupati</p>
+            </div>
+            <button class="edu-toggle" aria-expanded="false" aria-label="Toggle education details">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </div>
+          <p class="edu-summary">Comprehensive CS study with focus on software engineering, algorithms, data structures, and modern web technologies.</p>
+          <div class="edu-tags"><span>Software Engineering</span><span>Algorithms</span><span>Web Development</span></div>
+          <div class="edu-details" aria-hidden="true">
+            <div class="edu-details-inner">
+              <div class="edu-detail-row">
+                <div class="edu-detail-block">
+                  <h4>Key Courses</h4>
+                  <ul>
+                    <li>Data Structures & Algorithms</li>
+                    <li>OOP (Java)</li>
+                    <li>DBMS</li>
+                    <li>OS & Networks</li>
+                    <li>Software Engineering</li>
+                  </ul>
+                </div>
+                <div class="edu-detail-block">
+                  <h4>Projects & Achievements</h4>
+                  <ul>
+                    <li>Built 10+ academic projects</li>
+                    <li>Completed 7 industry internships</li>
+                    <li>National-level hackathons</li>
+                    <li>Student technical team lead</li>
+                  </ul>
+                </div>
+              </div>
+              <p class="edu-detail-note">🏆 Graduated with comprehensive hands-on experience across the full SDLC.</p>
+              <div class="edu-humanized">
+                <h4>My Journey at AITS</h4>
+                <p>Four years at AITS Tirupati were transformational. In my first year, I was just figuring out how to write a proper loop. By my final year, I had shipped production-level applications, led a technical team, and represented the college at multiple hackathons. The journey wasn't always smooth — there were late nights debugging code that refused to cooperate, and moments where I seriously questioned my approach. But each obstacle became a lesson.</p>
+                <p>What set my time here apart was the focus on doing, not just learning. I actively pursued internships from my second year itself, bringing real-world perspectives back to the classroom. My professors were supportive of this "learn by building" philosophy, and it shaped the developer I am today. I graduated not just with a degree, but with a portfolio, industry certifications, and — most importantly — a deep love for building things that matter.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="edu-item reveal-up">
+        <div class="edu-marker"></div>
+        <div class="edu-card">
+          <div class="edu-card-header">
+            <div class="edu-icon">📚</div>
+            <div class="edu-main">
+              <span class="edu-year">2018 — 2020</span>
+              <h3 class="edu-degree">Intermediate (MPC) — 6.5 GPA</h3>
+              <p class="edu-school">Amaravathi Junior College, Venkatagiri</p>
+            </div>
+            <button class="edu-toggle" aria-expanded="false" aria-label="Toggle education details">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </div>
+          <p class="edu-summary">Specialized in Mathematics, Physics, and Chemistry, building strong analytical foundations.</p>
+          <div class="edu-tags"><span>Mathematics</span><span>Physics</span><span>Chemistry</span></div>
+          <div class="edu-details" aria-hidden="true">
+            <div class="edu-details-inner">
+              <p class="edu-detail-note">💡 This phase ignited my curiosity for computing through mathematical pattern recognition.</p>
+              <div class="edu-humanized">
+                <h4>The Foundation Years</h4>
+                <p>Intermediate was where the spark was lit. Solving complex calculus problems and understanding the laws of physics taught me one invaluable skill: <em>systematic thinking</em>. I began to see patterns in seemingly unrelated things — a skill that translates directly into debugging code and designing algorithms. While I wasn't coding yet, I was building the mental framework that would make me a better engineer. MPC wasn't just a stream; it was the blueprint for analytical reasoning.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="edu-item reveal-up">
+        <div class="edu-marker"></div>
+        <div class="edu-card">
+          <div class="edu-card-header">
+            <div class="edu-icon">🏆</div>
+            <div class="edu-main">
+              <span class="edu-year">2017 — 2018</span>
+              <h3 class="edu-degree">Secondary School — 9.3 GPA</h3>
+              <p class="edu-school">Sri Chaitanya Techno School, Venkatagiri</p>
+            </div>
+            <button class="edu-toggle" aria-expanded="false" aria-label="Toggle education details">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+            </button>
+          </div>
+          <p class="edu-summary">Excellent academic performance (GPA 9.3) with strong science and mathematics foundation.</p>
+          <div class="edu-tags"><span>Academic Excellence</span><span>Merit Recognition</span></div>
+          <div class="edu-details" aria-hidden="true">
+            <div class="edu-details-inner">
+              <p class="edu-detail-note">⭐ Foundation of excellence that drives my professional standards today.</p>
+              <div class="edu-humanized">
+                <h4>Where It All Began</h4>
+                <p>A 9.3 GPA sounds like a number, but behind it is a story of discipline, curiosity, and a teacher who first showed me what a computer could do. Sri Chaitanya wasn't just about grades — it instilled a mindset of continuous improvement and accountability. Those early years of striving for excellence planted the seeds of the work ethic that I carry into every project and internship today. Every line of code I write with care traces back to this foundation.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section class="skills section" id="skills" aria-label="Skills">
+  <div class="container">
+    <div class="section-label reveal-up">Technical Arsenal</div>
+    <h2 class="section-title reveal-up">Skills</h2>
+    <div class="skills-category reveal-up">
+      <h3 class="skills-cat-title">Technical Skills</h3>
+      <p class="skills-hint">Click any skill to learn more</p>
+      <div class="skills-grid tech-skills">
+        <a class="skill-card" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">🚀</span></div><h4>JavaScript</h4><span class="skill-badge badge-expert">Expert</span></a>
+        <a class="skill-card" href="https://react.dev" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">⚛️</span></div><h4>React</h4><span class="skill-badge badge-advanced">Advanced</span></a>
+        <a class="skill-card" href="https://nodejs.org" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">🟢</span></div><h4>Node.js</h4><span class="skill-badge badge-expert">Expert</span></a>
+        <a class="skill-card" href="https://www.python.org" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">🐍</span></div><h4>Python</h4><span class="skill-badge badge-advanced">Advanced</span></a>
+        <a class="skill-card" href="https://www.oracle.com/java/" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">☕</span></div><h4>Java</h4><span class="skill-badge badge-advanced">Advanced</span></a>
+        <a class="skill-card" href="https://developer.mozilla.org/en-US/docs/Web/CSS" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">🎨</span></div><h4>CSS / SASS</h4><span class="skill-badge badge-expert">Expert</span></a>
+        <a class="skill-card" href="https://www.mongodb.com" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">📦</span></div><h4>MongoDB</h4><span class="skill-badge badge-advanced">Advanced</span></a>
+        <a class="skill-card" href="https://www.postgresql.org" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">🐘</span></div><h4>PostgreSQL</h4><span class="skill-badge badge-advanced">Advanced</span></a>
+        <a class="skill-card" href="https://aws.amazon.com" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">☁️</span></div><h4>AWS</h4><span class="skill-badge badge-inter">Intermediate</span></a>
+        <a class="skill-card" href="https://www.docker.com" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">🐳</span></div><h4>Docker</h4><span class="skill-badge badge-advanced">Advanced</span></a>
+        <a class="skill-card" href="https://git-scm.com" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">🔧</span></div><h4>Git</h4><span class="skill-badge badge-expert">Expert</span></a>
+        <a class="skill-card" href="https://www.typescriptlang.org" target="_blank" rel="noopener noreferrer"><div class="skill-icon-wrap"><span class="skill-emoji">🎯</span></div><h4>TypeScript</h4><span class="skill-badge badge-advanced">Advanced</span></a>
+      </div>
+    </div>
+    <div class="skills-category reveal-up">
+      <h3 class="skills-cat-title">Soft Skills</h3>
+      <div class="skills-grid soft-skills">
+        <div class="skill-card soft-card" tabindex="0"><div class="skill-icon-wrap"><span class="skill-emoji">💡</span></div><h4>Problem Solving</h4></div>
+        <div class="skill-card soft-card" tabindex="0"><div class="skill-icon-wrap"><span class="skill-emoji">👥</span></div><h4>Team Collaboration</h4></div>
+        <div class="skill-card soft-card" tabindex="0"><div class="skill-icon-wrap"><span class="skill-emoji">💬</span></div><h4>Communication</h4></div>
+        <div class="skill-card soft-card" tabindex="0"><div class="skill-icon-wrap"><span class="skill-emoji">⏰</span></div><h4>Time Management</h4></div>
+        <div class="skill-card soft-card" tabindex="0"><div class="skill-icon-wrap"><span class="skill-emoji">🎯</span></div><h4>Attention to Detail</h4></div>
+        <div class="skill-card soft-card" tabindex="0"><div class="skill-icon-wrap"><span class="skill-emoji">🔄</span></div><h4>Adaptability</h4></div>
+        <div class="skill-card soft-card" tabindex="0"><div class="skill-icon-wrap"><span class="skill-emoji">📚</span></div><h4>Quick Learning</h4></div>
+        <div class="skill-card soft-card" tabindex="0"><div class="skill-icon-wrap"><span class="skill-emoji">📊</span></div><h4>Analytical Thinking</h4></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INTERNSHIPS -->
+<section class="internships section" id="internships" aria-label="Internships and Certifications">
+  <div class="container">
+    <div class="section-label reveal-up">Experience & Credentials</div>
+    <h2 class="section-title reveal-up">Internships &amp; Certifications</h2>
+    <p class="section-subtitle reveal-up">Expand each card to view project details and certificate</p>
+    <div class="intern-grid">
+
+      <div class="intern-card reveal-up">
+        <div class="intern-card-header">
+          <div class="intern-icon-wrap">☁️</div>
+          <div class="intern-info"><h3>AWS Cloud Internship</h3><p class="intern-company">Amazon Web Services</p></div>
+          <button class="intern-toggle" aria-expanded="false" aria-label="Expand details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        </div>
+        <p class="intern-preview">Cloud computing, EC2, S3, Lambda, serverless architecture</p>
+        <div class="intern-tags"><span>AWS EC2</span><span>S3</span><span>Lambda</span><span>CloudFormation</span></div>
+        <div class="intern-details" aria-hidden="true">
+          <div class="intern-details-inner">
+            <h4>Skills Gained</h4>
+            <div class="intern-detail-tags"><span>EC2</span><span>S3</span><span>Lambda</span><span>CloudFormation</span><span>IAM</span></div>
+            <h4>Project Contribution</h4>
+            <p>Designed and deployed a serverless web application on AWS using Lambda, API Gateway, and DynamoDB achieving 99.9% uptime with auto-scaling.</p>
+            <h4>Certificate</h4>
+            <div class="cert-thumb-wrap">
+              <img src="https://raw.githubusercontent.com/Thiru7869/New_Portfolio/main/aws.jpeg" 
+                   alt="AWS Cloud Certificate" 
+                   class="cert-thumb" 
+                   data-caption="AWS Cloud Internship — Amazon Web Services" 
+                   loading="lazy"
+                   crossorigin="anonymous"
+                   onerror="this.closest('.cert-thumb-wrap').classList.add('cert-img-error'); this.style.display='none'"/>
+              <div class="cert-thumb-overlay">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
+                <span>View Full Screen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intern-card reveal-up">
+        <div class="intern-card-header">
+          <div class="intern-icon-wrap">🐍</div>
+          <div class="intern-info"><h3>Python Full Stack</h3><p class="intern-company">Datavalley</p></div>
+          <button class="intern-toggle" aria-expanded="false" aria-label="Expand details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        </div>
+        <p class="intern-preview">Django, Flask, REST APIs, PostgreSQL backend mastery</p>
+        <div class="intern-tags"><span>Django</span><span>Flask</span><span>REST APIs</span><span>PostgreSQL</span></div>
+        <div class="intern-details" aria-hidden="true">
+          <div class="intern-details-inner">
+            <h4>Skills Gained</h4>
+            <div class="intern-detail-tags"><span>Django</span><span>Flask</span><span>PostgreSQL</span><span>REST APIs</span></div>
+            <h4>Project Contribution</h4>
+            <p>Developed a multi-user task management application with Django REST Framework featuring real-time notifications via WebSockets.</p>
+            <h4>Certificate</h4>
+            <div class="cert-thumb-wrap">
+              <img src="https://raw.githubusercontent.com/Thiru7869/New_Portfolio/main/DataValley.jpeg" 
+                   alt="Datavalley Certificate" 
+                   class="cert-thumb" 
+                   data-caption="Python Full Stack — Datavalley" 
+                   loading="lazy"
+                   crossorigin="anonymous"
+                   onerror="this.closest('.cert-thumb-wrap').classList.add('cert-img-error'); this.style.display='none'"/>
+              <div class="cert-thumb-overlay">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
+                <span>View Full Screen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intern-card reveal-up">
+        <div class="intern-card-header">
+          <div class="intern-icon-wrap">☕</div>
+          <div class="intern-info"><h3>Full Stack Java</h3><p class="intern-company">EXCELR</p></div>
+          <button class="intern-toggle" aria-expanded="false" aria-label="Expand details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        </div>
+        <p class="intern-preview">Spring Boot, microservices, enterprise Java applications</p>
+        <div class="intern-tags"><span>Java</span><span>Spring Boot</span><span>Microservices</span></div>
+        <div class="intern-details" aria-hidden="true">
+          <div class="intern-details-inner">
+            <h4>Skills Gained</h4>
+            <div class="intern-detail-tags"><span>Java</span><span>Spring Boot</span><span>Microservices</span><span>JWT</span></div>
+            <h4>Project Contribution</h4>
+            <p>Built a fully-featured e-commerce backend using Spring Boot microservices with JWT authentication and RESTful APIs.</p>
+            <h4>Certificate</h4>
+            <div class="cert-thumb-wrap">
+              <img src="https://raw.githubusercontent.com/Thiru7869/New_Portfolio/main/ExceLr.jpeg" 
+                   alt="EXCELR Certificate" 
+                   class="cert-thumb" 
+                   data-caption="Full Stack Java — EXCELR" 
+                   loading="lazy"
+                   crossorigin="anonymous"
+                   onerror="this.closest('.cert-thumb-wrap').classList.add('cert-img-error'); this.style.display='none'"/>
+              <div class="cert-thumb-overlay">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
+                <span>View Full Screen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intern-card reveal-up">
+        <div class="intern-card-header">
+          <div class="intern-icon-wrap">🎤</div>
+          <div class="intern-info"><h3>Public Speaking</h3><p class="intern-company">NPTEL</p></div>
+          <button class="intern-toggle" aria-expanded="false" aria-label="Expand details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        </div>
+        <p class="intern-preview">Communication, presentation design & technical speaking</p>
+        <div class="intern-tags"><span>Public Speaking</span><span>Presentation</span></div>
+        <div class="intern-details" aria-hidden="true">
+          <div class="intern-details-inner">
+            <h4>Certificate</h4>
+            <div class="cert-thumb-wrap">
+              <img src="https://raw.githubusercontent.com/Thiru7869/New_Portfolio/main/NPTEL.jpeg" 
+                   alt="NPTEL Certificate" 
+                   class="cert-thumb" 
+                   data-caption="Public Speaking — NPTEL" 
+                   loading="lazy"
+                   crossorigin="anonymous"
+                   onerror="this.closest('.cert-thumb-wrap').classList.add('cert-img-error'); this.style.display='none'"/>
+              <div class="cert-thumb-overlay">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
+                <span>View Full Screen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intern-card reveal-up">
+        <div class="intern-card-header">
+          <div class="intern-icon-wrap">🌐</div>
+          <div class="intern-info"><h3>Full Stack Web Dev</h3><p class="intern-company">Slashmark</p></div>
+          <button class="intern-toggle" aria-expanded="false" aria-label="Expand details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        </div>
+        <p class="intern-preview">MERN Stack, responsive UI design and dashboards</p>
+        <div class="intern-tags"><span>React.js</span><span>Node.js</span><span>MongoDB</span></div>
+        <div class="intern-details" aria-hidden="true">
+          <div class="intern-details-inner">
+            <h4>Certificate</h4>
+            <div class="cert-thumb-wrap">
+              <img src="https://raw.githubusercontent.com/Thiru7869/New_Portfolio/main/XAASWEB.jpeg" 
+                   alt="Slashmark Certificate" 
+                   class="cert-thumb" 
+                   data-caption="Full Stack Web Dev — Slashmark" 
+                   loading="lazy"
+                   crossorigin="anonymous"
+                   onerror="this.closest('.cert-thumb-wrap').classList.add('cert-img-error'); this.style.display='none'"/>
+              <div class="cert-thumb-overlay">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
+                <span>View Full Screen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intern-card reveal-up">
+        <div class="intern-card-header">
+          <div class="intern-icon-wrap">💻</div>
+          <div class="intern-info"><h3>Full Stack Web Dev</h3><p class="intern-company">Edunutshell</p></div>
+          <button class="intern-toggle" aria-expanded="false" aria-label="Expand details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        </div>
+        <p class="intern-preview">JavaScript frameworks, Redux, WebSockets</p>
+        <div class="intern-tags"><span>React</span><span>Redux</span><span>Socket.io</span></div>
+        <div class="intern-details" aria-hidden="true">
+          <div class="intern-details-inner">
+            <h4>Certificate</h4>
+            <div class="cert-thumb-wrap">
+              <img src="https://raw.githubusercontent.com/Thiru7869/New_Portfolio/main/EdunutShell.jpeg" 
+                   alt="Edunutshell Certificate" 
+                   class="cert-thumb" 
+                   data-caption="Full Stack Web Dev — Edunutshell" 
+                   loading="lazy"
+                   crossorigin="anonymous"
+                   onerror="this.closest('.cert-thumb-wrap').classList.add('cert-img-error'); this.style.display='none'"/>
+              <div class="cert-thumb-overlay">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/></svg>
+                <span>View Full Screen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intern-card reveal-up">
+        <div class="intern-card-header">
+          <div class="intern-icon-wrap">🔐</div>
+          <div class="intern-info"><h3>Cybersecurity</h3><p class="intern-company">Internshala</p></div>
+          <button class="intern-toggle" aria-expanded="false" aria-label="Expand details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        </div>
+        <p class="intern-preview">Network security, ethical hacking, OWASP assessment</p>
+        <div class="intern-tags"><span>Network Security</span><span>Ethical Hacking</span></div>
+        <div class="intern-details" aria-hidden="true">
+          <div class="intern-details-inner">
+            <h4>Certificate</h4>
+            <div class="cert-thumb-wrap cert-no-image">
+              <div class="cert-placeholder"><span>🔐</span><p>Cybersecurity — Internshala</p><a href="https://drive.google.com/drive/folders/1CeUNMpxUDLLAZ9WpRYlME_wbw_3AW7J_" target="_blank" rel="noopener" class="cert-link-btn">View Certificate →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="intern-card reveal-up">
+        <div class="intern-card-header">
+          <div class="intern-icon-wrap">🏆</div>
+          <div class="intern-info"><h3>Problem Solving Expert</h3><p class="intern-company">Chegg Inc.</p></div>
+          <button class="intern-toggle" aria-expanded="false" aria-label="Expand details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        </div>
+        <p class="intern-preview">Certified SME — 500+ solutions, 95%+ student satisfaction</p>
+        <div class="intern-tags"><span>Java</span><span>Python</span><span>DSA</span></div>
+        <div class="intern-details" aria-hidden="true">
+          <div class="intern-details-inner">
+            <h4>Certificate</h4>
+            <div class="cert-thumb-wrap cert-no-image">
+              <div class="cert-placeholder"><span>🏆</span><p>SME Certification — Chegg Inc.</p><a href="https://drive.google.com/drive/folders/1CeUNMpxUDLLAZ9WpRYlME_wbw_3AW7J_" target="_blank" rel="noopener" class="cert-link-btn">View Certificate →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="projects section" id="projects" aria-label="Projects">
+  <div class="container">
+    <div class="section-label reveal-up">Featured Work</div>
+    <h2 class="section-title reveal-up">Projects</h2>
+    <div class="project-filters reveal-up" role="group" aria-label="Filter projects">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="fullstack">Full Stack</button>
+      <button class="filter-btn" data-filter="cloud">Cloud</button>
+      <button class="filter-btn" data-filter="data">Data</button>
+      <button class="filter-btn" data-filter="security">Security</button>
+    </div>
+    <div class="projects-grid" id="projectsGrid">
+      <div class="project-card reveal-up" data-category="fullstack"><div class="project-img pi-ecommerce"><span class="pi-label">Full Stack</span></div><div class="project-body"><h3>E-Commerce Platform</h3><p>Full-stack solution with real-time inventory, payment integration, and admin dashboard.</p><div class="project-tech"><span>React</span><span>Node.js</span><span>MongoDB</span><span>Stripe</span></div><a href="https://github.com/Thiru7869" target="_blank" rel="noopener" class="project-link">View on GitHub</a></div></div>
+      <div class="project-card reveal-up" data-category="fullstack"><div class="project-img pi-task"><span class="pi-label">Full Stack</span></div><div class="project-body"><h3>Task Management App</h3><p>Collaborative tool with real-time updates, team analytics, and Kanban boards.</p><div class="project-tech"><span>Django</span><span>PostgreSQL</span><span>React</span><span>WebSockets</span></div><a href="https://github.com/Thiru7869" target="_blank" rel="noopener" class="project-link">View on GitHub</a></div></div>
+      <div class="project-card reveal-up" data-category="cloud"><div class="project-img pi-cloud"><span class="pi-label">Cloud</span></div><div class="project-body"><h3>Cloud Infrastructure</h3><p>AWS-based serverless application with auto-scaling, monitoring, and IaC templates.</p><div class="project-tech"><span>AWS</span><span>Lambda</span><span>DynamoDB</span><span>CloudFormation</span></div><a href="https://github.com/Thiru7869" target="_blank" rel="noopener" class="project-link">View on GitHub</a></div></div>
+      <div class="project-card reveal-up" data-category="fullstack"><div class="project-img pi-chat"><span class="pi-label">Real-Time</span></div><div class="project-body"><h3>Real-Time Chat App</h3><p>WebSocket-based chat with file sharing, group rooms, and message persistence.</p><div class="project-tech"><span>React</span><span>Socket.io</span><span>Node.js</span><span>MongoDB</span></div><a href="https://github.com/Thiru7869" target="_blank" rel="noopener" class="project-link">View on GitHub</a></div></div>
+      <div class="project-card reveal-up" data-category="data"><div class="project-img pi-analytics"><span class="pi-label">Data</span></div><div class="project-body"><h3>Data Analytics Dashboard</h3><p>Interactive dashboard with real-time insights, customizable reports, and D3.js charts.</p><div class="project-tech"><span>Python</span><span>Pandas</span><span>D3.js</span><span>Flask</span></div><a href="https://github.com/Thiru7869" target="_blank" rel="noopener" class="project-link">View on GitHub</a></div></div>
+      <div class="project-card reveal-up" data-category="security"><div class="project-img pi-security"><span class="pi-label">Security</span></div><div class="project-body"><h3>Security Audit Tool</h3><p>Web application vulnerability scanner based on OWASP Top 10 with detailed reporting.</p><div class="project-tech"><span>Python</span><span>Flask</span><span>OWASP</span><span>Burp Suite</span></div><a href="https://github.com/Thiru7869" target="_blank" rel="noopener" class="project-link">View on GitHub</a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section class="experience section" id="experience" aria-label="Experience">
+  <div class="container">
+    <div class="section-label reveal-up">Professional Experience</div>
+    <h2 class="section-title reveal-up">Experience</h2>
+    <div class="experience-card reveal-up">
+      <div class="exp-card-top">
+        <div class="exp-logo"><span>C</span></div>
+        <div class="exp-title-group">
+          <h3>Subject Matter Expert</h3>
+          <p class="exp-company">Chegg Inc.</p>
+          <div class="exp-meta">
+            <span class="exp-badge exp-badge-type">Remote / Freelance</span>
+            <span class="exp-badge exp-badge-domain">EdTech · Computer Science</span>
+            <span class="exp-badge exp-badge-duration">2022 – Present</span>
+          </div>
+        </div>
+      </div>
+      <p class="exp-description">Serving as a Computer Science and Programming expert on Chegg's global platform, providing in-depth, step-by-step solutions to complex academic problems. Maintaining 95%+ satisfaction across 500+ solutions.</p>
+      <div class="exp-achievements-row">
+        <div class="exp-ach-card"><span class="exp-ach-num">500+</span><span class="exp-ach-label">Solutions Delivered</span></div>
+        <div class="exp-ach-card"><span class="exp-ach-num">95%+</span><span class="exp-ach-label">Student Satisfaction</span></div>
+        <div class="exp-ach-card"><span class="exp-ach-num">3+</span><span class="exp-ach-label">Years Active</span></div>
+        <div class="exp-ach-card"><span class="exp-ach-num">10+</span><span class="exp-ach-label">Subject Areas</span></div>
+      </div>
+      <div class="exp-tech-used">
+        <h4>Technologies Used</h4>
+        <div class="exp-tech-tags"><span>Java</span><span>Python</span><span>JavaScript</span><span>C++</span><span>SQL</span><span>React</span><span>Node.js</span><span>Spring Boot</span><span>Django</span><span>DSA</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact section" id="contact" aria-label="Contact">
+  <div class="container">
+    <div class="section-label reveal-up">Get In Touch</div>
+    <h2 class="section-title reveal-up">Let's Work Together</h2>
+    <div class="contact-grid">
+      <div class="contact-left reveal-left">
+        <p class="contact-intro">Have a project in mind or looking for a dedicated developer? I'd love to hear from you.</p>
+        <div class="contact-options">
+          <a href="mailto:reddytn4@gmail.com" class="contact-opt"><span class="contact-opt-icon">📧</span><div><strong>Gmail</strong><p>reddytn4@gmail.com</p></div><button class="copy-btn" data-copy="reddytn4@gmail.com" aria-label="Copy email" onclick="event.preventDefault()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></a>
+          <a href="mailto:reddytn4@outlook.com" class="contact-opt"><span class="contact-opt-icon">📬</span><div><strong>Outlook</strong><p>reddytn4@outlook.com</p></div><button class="copy-btn" data-copy="reddytn4@outlook.com" aria-label="Copy outlook" onclick="event.preventDefault()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button></a>
+          <a href="tel:+919392613828" class="contact-opt"><span class="contact-opt-icon">📱</span><div><strong>Phone</strong><p>+91 9392613828</p></div></a>
+          <a href="https://wa.me/919392613828" target="_blank" rel="noopener" class="contact-opt"><span class="contact-opt-icon">💬</span><div><strong>WhatsApp</strong><p>Chat Now</p></div></a>
+        </div>
+        <div class="social-row">
+          <a href="https://www.linkedin.com/in/thirumala-narasimha-poluru-23775926b" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+          <a href="https://github.com/Thiru7869" target="_blank" rel="noopener" class="social-btn" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+          <a href="https://leetcode.com/u/thiru7869/" target="_blank" rel="noopener" class="social-btn" aria-label="LeetCode"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H20.79a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/></svg></a>
+          <a href="https://wa.me/919392613828" target="_blank" rel="noopener" class="social-btn" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
+        </div>
+      </div>
+      <form class="contact-form reveal-right" id="contactForm" novalidate>
+        <div class="form-group"><label for="name" class="form-label">Your Name</label><input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name"></div>
+        <div class="form-group"><label for="email" class="form-label">Email Address</label><input type="email" id="email" name="email" placeholder="john@example.com" required autocomplete="email"></div>
+        <div class="form-group"><label for="subject" class="form-label">Subject</label><input type="text" id="subject" name="subject" placeholder="Project Inquiry" required></div>
+        <div class="form-group"><label for="message" class="form-label">Message</label><textarea id="message" name="message" rows="5" placeholder="Tell me about your project…" required></textarea></div>
+        <button type="submit" class="btn btn-primary btn-full" id="submitBtn">
+          <span class="btn-text">Send Message</span>
+          <span class="btn-loading-state" aria-hidden="true"><span class="spinner"></span>Sending…</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- RATING -->
+<section class="rating-section section" id="rating" aria-label="Rate my portfolio">
+  <div class="container">
+    <div class="section-label reveal-up">Your Opinion Matters</div>
+    <h2 class="section-title reveal-up">Rate My Portfolio</h2>
+    <p class="section-subtitle reveal-up">Share your honest feedback — it reaches me directly via email.</p>
+    <div class="rating-layout">
+      <div class="rating-form-wrap reveal-left">
+        <form id="ratingForm" novalidate>
+          <div class="hp-field" aria-hidden="true"><input type="text" name="website" id="hp_website" tabindex="-1" autocomplete="off"></div>
+          <div class="rating-score-group">
+            <label class="rating-label">How would you rate this portfolio?</label>
+            <div class="rating-numbers" id="ratingNumbers" role="group" aria-label="Rating 1 to 10">
+              <button type="button" class="rating-num" data-val="1" aria-label="1">1</button>
+              <button type="button" class="rating-num" data-val="2" aria-label="2">2</button>
+              <button type="button" class="rating-num" data-val="3" aria-label="3">3</button>
+              <button type="button" class="rating-num" data-val="4" aria-label="4">4</button>
+              <button type="button" class="rating-num" data-val="5" aria-label="5">5</button>
+              <button type="button" class="rating-num" data-val="6" aria-label="6">6</button>
+              <button type="button" class="rating-num" data-val="7" aria-label="7">7</button>
+              <button type="button" class="rating-num" data-val="8" aria-label="8">8</button>
+              <button type="button" class="rating-num" data-val="9" aria-label="9">9</button>
+              <button type="button" class="rating-num" data-val="10" aria-label="10">10</button>
+            </div>
+            <input type="hidden" id="selectedRating" name="rating" value="">
+            <p class="rating-hint" id="ratingHint">Select a number above</p>
+          </div>
+          <div class="form-group"><label for="reviewerName" class="form-label">Your Name <span class="optional-tag">(optional)</span></label><input type="text" id="reviewerName" name="reviewerName" placeholder="Anonymous" autocomplete="name"></div>
+          <div class="form-group rating-email-field">
+            <label for="reviewerEmail" class="form-label">Your Email <span class="optional-tag">(optional — for my reply)</span></label>
+            <input type="email" id="reviewerEmail" name="reviewerEmail" placeholder="you@example.com" autocomplete="email">
+            <span class="email-badge">private</span>
+          </div>
+          <div class="form-group"><label for="reviewText" class="form-label">Your Review</label><textarea id="reviewText" name="reviewText" rows="4" placeholder="Share your thoughts about design, content, or anything else…" required></textarea></div>
+          <button type="submit" class="btn btn-primary btn-full" id="ratingSubmitBtn">
+            <span class="btn-text">Submit Rating</span>
+            <span class="btn-loading-state" aria-hidden="true"><span class="spinner"></span>Submitting…</span>
+          </button>
+        </form>
+      </div>
+      <div class="rating-stats-wrap reveal-right">
+        <div class="avg-card">
+          <div class="avg-score" id="avgScore">—</div>
+          <div class="avg-label-text">Average Rating</div>
+          <div class="avg-bar-wrap"><div class="avg-bar" id="avgBar" style="width:0%"></div></div>
+          <div class="total-reviews" id="totalReviews">No reviews yet — be the first!</div>
+        </div>
+        <div class="reviews-list" id="reviewsList" aria-label="Recent reviews"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER — Enhanced -->
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">Thiru <span>/</span> Portfolio</div>
+        <p>Full Stack Developer & Data Science Enthusiast passionate about creating innovative digital solutions. Currently open to full-time roles, freelance projects, and collaborations that make a real-world impact.</p>
+        <div class="footer-availability">
+          <span class="footer-avail-dot"></span>
+          <span>Available for new opportunities</span>
+        </div>
+        <div class="footer-socials">
+          <a href="https://www.linkedin.com/in/thirumala-narasimha-poluru-23775926b" target="_blank" rel="noopener" aria-label="LinkedIn">in</a>
+          <a href="https://github.com/Thiru7869" target="_blank" rel="noopener" aria-label="GitHub"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+          <a href="https://leetcode.com/u/thiru7869/" target="_blank" rel="noopener" aria-label="LeetCode">LC</a>
+          <a href="https://wa.me/919392613828" target="_blank" rel="noopener" aria-label="WhatsApp">WA</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Quick Navigation</h4>
+        <a href="#home">🏠 Home</a>
+        <a href="#about">👤 About</a>
+        <a href="#education">🎓 Education</a>
+        <a href="#skills">💻 Skills</a>
+        <a href="#internships">📜 Internships</a>
+        <a href="#projects">🚀 Projects</a>
+        <a href="#experience">⭐ Experience</a>
+        <a href="#contact">📧 Contact</a>
+        <a href="#rating">⭐ Rate Portfolio</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Education</h4>
+        <div class="footer-edu-item">
+          <strong>MBA — Data Science</strong>
+          <p>Amity University, Noida</p>
+          <span class="footer-edu-badge ongoing">Ongoing</span>
+        </div>
+        <div class="footer-edu-item">
+          <strong>B.Tech — CSE</strong>
+          <p>AITS, Tirupati</p>
+          <span class="footer-edu-badge completed">2020–2024</span>
+        </div>
+        <h4 style="margin-top:18px;">Certifications</h4>
+        <a href="https://drive.google.com/drive/folders/1CeUNMpxUDLLAZ9WpRYlME_wbw_3AW7J_" target="_blank" rel="noopener">☁️ AWS Cloud</a>
+        <a href="https://drive.google.com/drive/folders/1CeUNMpxUDLLAZ9WpRYlME_wbw_3AW7J_" target="_blank" rel="noopener">🐍 Python Full Stack</a>
+        <a href="https://drive.google.com/drive/folders/1CeUNMpxUDLLAZ9WpRYlME_wbw_3AW7J_" target="_blank" rel="noopener">☕ Full Stack Java</a>
+        <a href="https://drive.google.com/drive/folders/1CeUNMpxUDLLAZ9WpRYlME_wbw_3AW7J_" target="_blank" rel="noopener">🔐 Cybersecurity</a>
+      </div>
+
+      <div class="footer-col">
+        <h4>Get In Touch</h4>
+        <div class="footer-contact-item">
+          <span>📧</span>
+          <div>
+            <a href="mailto:reddytn4@gmail.com">reddytn4@gmail.com</a>
+            <a href="mailto:reddytn4@outlook.com">reddytn4@outlook.com</a>
+          </div>
+        </div>
+        <div class="footer-contact-item">
+          <span>📱</span>
+          <a href="tel:+919392613828">+91 9392613828</a>
+        </div>
+        <div class="footer-contact-item">
+          <span>📍</span>
+          <span>Venkatagiri, Andhra Pradesh, India</span>
+        </div>
+        <div class="footer-contact-item">
+          <span>💬</span>
+          <a href="https://wa.me/919392613828" target="_blank" rel="noopener">WhatsApp — Chat Now</a>
+        </div>
+        <a href="https://drive.google.com/uc?export=download&id=1WMkpszuSoUas1w5Odq3os433vnDiit-l" target="_blank" rel="noopener" class="footer-cv-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Resume / CV
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-skills-bar">
+      <div class="footer-skills-label">Core Stack</div>
+      <div class="footer-skills-chips">
+        <span>React</span><span>Node.js</span><span>Python</span><span>Java</span><span>AWS</span><span>MongoDB</span><span>PostgreSQL</span><span>Docker</span><span>TypeScript</span><span>Spring Boot</span>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2026 Thirumala Narasimha Poluru. All rights reserved.</p>
+      <p>Built with passion, precision &amp; commitment to excellence</p>
+      <p class="footer-made-with">Crafted from scratch with HTML · CSS · JavaScript</p>
+    </div>
+  </div>
+</footer>
+
+<script src="js/download.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
