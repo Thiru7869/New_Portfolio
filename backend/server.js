@@ -98,7 +98,7 @@ async function startServer() {
     await verifyConnection();
 
     // Start server
-    app.listen(PORT, () => {
+    app.listen(PORT, "0.0.0.0", () => {
       console.log(`
 ╔══════════════════════════════════════════════╗
 ║     Portfolio Backend Server — Started       ║
@@ -108,7 +108,7 @@ async function startServer() {
 ║  Email : ${process.env.EMAIL_USER}
 ╚══════════════════════════════════════════════╝
 
-🚀 API ready at http://localhost:${PORT}
+🚀 API ready on port ${PORT}
 `);
     });
   } catch (error) {
