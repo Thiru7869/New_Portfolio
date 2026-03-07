@@ -29,9 +29,18 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
+
+      console.log("🌐 Incoming origin:", origin);
+
       if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) !== -1) callback(null, true);
-      else callback(new Error("CORS not allowed"));
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        console.error("❌ CORS blocked:", origin);
+        callback(new Error("CORS not allowed"));
+      }
+
     },
     credentials: true,
   })
@@ -72,17 +81,30 @@ app.get("/", (req, res) => {
 // TEST EMAIL ENDPOINT
 // =============================
 app.get("/api/test-email", (req, res) => {
+
+  console.log("📧 Test email requested");
+
   transporter.sendMail({
     from: process.env.EMAIL_USER,
     to: process.env.ADMIN_EMAIL,
     subject: "Test Email from Portfolio",
     text: "Hello! This is a test email from your portfolio backend.",
   })
-    .then(() => res.send("✅ Test email sent successfully!"))
+    .then(() => {
+
+      console.log("✅ Test email sent");
+
+      res.send("✅ Test email sent successfully!");
+
+    })
     .catch(err => {
+
       console.error("❌ Test email failed:", err.message);
+
       res.status(500).send("❌ Email failed");
+
     });
+
 });
 
 // =============================
@@ -92,10 +114,13 @@ const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   try {
+
     await connectDB();
+
     console.log("✅ MongoDB connected");
 
     const server = app.listen(PORT, "0.0.0.0", () => {
+
       console.log(`
 ╔══════════════════════════════════════════════╗
 ║     Portfolio Backend Server — Started       ║
@@ -106,9 +131,10 @@ async function startServer() {
 ╚══════════════════════════════════════════════╝
 🚀 API ready on port ${PORT}
 `);
+
     });
 
-    // Verify mail connection asynchronously (non-blocking)
+    // Verify mail connection asynchronously
     verifyConnection()
       .then(() => console.log("✅ SMTP mail server verified"))
       .catch(err =>
@@ -116,8 +142,10 @@ async function startServer() {
       );
 
   } catch (error) {
+
     console.error("❌ Server failed to start");
     console.error(error);
+
     process.exit(1);
   }
 }
