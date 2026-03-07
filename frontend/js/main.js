@@ -1,9 +1,14 @@
 'use strict';
+
+// ── BACKEND URL ───────────────────────────────────────────────
+
 const BACKEND_URL = (() => {
   const h = window.location.hostname;
   if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:5000';
-  return 'https://portfolio-backend-REPLACE_ME.onrender.com';
+  return 'https://new-portfolio-a8mf.onrender.com';
 })();
+
+
 const backendConfigured = () =>
   !!BACKEND_URL && !BACKEND_URL.includes('REPLACE_ME');
 
