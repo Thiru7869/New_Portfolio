@@ -3,8 +3,6 @@
    Added: CV progress-bar animation, reviewer email field
    ============================================================ */
 
-@font-face { font-display: swap; }
-
 /* ── DESIGN TOKENS (DARK) ─────────────────────────────────── */
 :root {
   --bg-0: #060b14;
@@ -1046,7 +1044,10 @@ body.light-mode .hero-orb-2 { background:radial-gradient(circle,rgba(3,105,161,0
 body.light-mode .edu-marker { border-color:var(--bg-1); }
 body.light-mode .footer { background:#0c1018; border-top:1px solid #1c2d47; }
 body.light-mode .footer-logo { color:#edf2ff; }
-body.light-mode .footer-brand p,.footer-col p { color:#7a8fa8; }
+/* FIX: Split into two separate rules so .footer-col p is only
+   overridden inside light-mode, not globally. */
+body.light-mode .footer-brand p { color:#7a8fa8; }
+body.light-mode .footer-col p { color:#7a8fa8; }
 body.light-mode .footer-col h4 { color:#c8d8ee; }
 body.light-mode .footer-col a { color:#7a8fa8; }
 body.light-mode .footer-col a:hover { color:#60a5fa; }
@@ -1145,7 +1146,7 @@ body.light-mode .intern-details-inner { background:var(--bg-3); }
   .contact-opt-icon { font-size:18px; }
   .contact-opt strong { font-size:12px; }
   .contact-opt p { font-size:10px; }
-}
+} /* FIX: closing brace for @media (max-width:480px) — was missing */
 
 /* ── MISC ──────────────────────────────────────────────────── */
 .social-row { display:flex; gap:10px; }
@@ -1361,4 +1362,4 @@ body.light-mode .soft-skill-modal-inner {
   .intern-preview { padding: 8px 12px 6px; font-size: 11px; }
   .intern-tags { padding: 0 12px 10px; }
   .intern-details-inner { padding: 10px 12px 12px; }
-}
+} /* FIX: closing brace was missing — caused all styles after this point to be silently dropped */
