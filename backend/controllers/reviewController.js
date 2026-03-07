@@ -1,9 +1,11 @@
-const transporter = require("../config/mailConfig");
+const { transporter } = require("../config/mailConfig");
 
 const submitReview = async (req, res) => {
   try {
 
     const { name, email, rating, message } = req.body;
+
+    console.log("📩 New review received:", name, email, rating);
 
     // USER EMAIL
     const userMail = {
@@ -55,14 +57,25 @@ const submitReview = async (req, res) => {
       `
     };
 
+    console.log("📤 Sending email to user...");
     await transporter.sendMail(userMail);
+
+    console.log("📤 Sending email to admin...");
     await transporter.sendMail(adminMail);
+
+    console.log("✅ Emails sent successfully");
 
     res.json({ message: "Review submitted successfully" });
 
   } catch (error) {
+
+    console.error("❌ Email sending failed");
     console.error(error);
-    res.status(500).json({ error: "Email failed" });
+
+    res.status(500).json({
+      error: "Email failed",
+      message: error.message
+    });
   }
 };
 
