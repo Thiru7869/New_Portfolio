@@ -1,7 +1,6 @@
 'use strict';
 
 // ── BACKEND URL ───────────────────────────────────────────────
-// Change the production URL below to your actual Render service URL.
 const BACKEND_URL = (() => {
   const h = window.location.hostname;
   if (h === 'localhost' || h === '127.0.0.1') return 'http://localhost:5000';
@@ -30,15 +29,23 @@ document.readyState === 'loading'
   : setTimeout(hidePreloader, 400);
 
 // ── THEME ─────────────────────────────────────────────────────
+// Default is LIGHT MODE. Dark is only applied if the user previously
+// chose dark explicitly (saved as 'dark' in localStorage).
 const themeToggle    = $('#themeToggle');
 const themeColorMeta = document.getElementById('themeColorMeta');
+
 function applyTheme(isLight) {
   document.body.classList.toggle('light-mode', isLight);
   themeToggle && (themeToggle.checked = isLight, themeToggle.setAttribute('aria-checked', String(isLight)));
   themeColorMeta && (themeColorMeta.content = isLight ? '#f0f4ff' : '#060b14');
   localStorage.setItem('theme', isLight ? 'light' : 'dark');
 }
-if (localStorage.getItem('theme') === 'light') applyTheme(true);
+
+// On first visit localStorage has no 'theme' key → savedTheme is null → default to light.
+// User can only get dark mode by explicitly toggling the switch.
+const savedTheme = localStorage.getItem('theme');
+applyTheme(savedTheme !== 'dark');
+
 themeToggle?.addEventListener('change', () => {
   applyTheme(themeToggle.checked);
   showToast(themeToggle.checked ? '☀️ Light mode on' : '🌙 Dark mode on', 'info', 1800);
@@ -140,8 +147,6 @@ function highlightNav() {
 window.addEventListener('scroll', debounce(highlightNav, 18), { passive: true });
 
 // ── SCROLL REVEAL ─────────────────────────────────────────────
-// Uses IntersectionObserver with staggered delays for sibling elements.
-// Stagger index is capped at 5 to avoid long waits on large grids.
 const revealObs = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (!entry.isIntersecting) return;
@@ -327,7 +332,6 @@ function initMobileFormScroll() {
 }
 
 // ── TOAST ────────────────────────────────────────────────────
-// Exposed on window so download.js can call it without a module bundler.
 function showToast(msg, type = 'info', duration = 3500) {
   const container = $('#toastContainer');
   if (!container) return;
@@ -435,7 +439,6 @@ const saveReview   = r  => { const a = getReviews(); a.push(r); if (a.length > 1
 const deleteReview = i  => { const a = getReviews(); a.splice(i, 1); localStorage.setItem(RATING_KEY, JSON.stringify(a)); };
 const updateReview = (i, rating, text) => { const a = getReviews(); if (a[i]) { a[i].rating = rating; a[i].text = text; a[i].edited = true; localStorage.setItem(RATING_KEY, JSON.stringify(a)); } };
 
-// Fetches reviews from the backend; returns null on failure so the caller falls back to localStorage.
 async function fetchReviewsFromBackend() {
   if (!backendConfigured()) return null;
   try {
@@ -450,8 +453,6 @@ async function fetchReviewsFromBackend() {
   } catch { return null; }
 }
 
-// POSTs a new review to the backend so emails can be triggered.
-// Fails silently — the review is already saved to localStorage before this is called.
 async function notifyBackend({ name, email, rating, message }) {
   if (!backendConfigured()) {
     console.info('[Portfolio] Set BACKEND_URL in main.js to enable email notifications.');
@@ -633,31 +634,22 @@ function initRatingSystem() {
 
   ratingForm.addEventListener('submit', async e => {
     e.preventDefault();
-
-    // Honeypot
     if ($('#hp_website')?.value) return;
-
-    // Rate limit
     const lastRated = localStorage.getItem(RATE_LIMIT_K);
     if (lastRated) {
       const hours = (Date.now() - +lastRated) / 3600000;
       if (hours < RATE_LIMIT_H) { showToast(`⏳ You can submit again in ${Math.ceil(RATE_LIMIT_H - hours)}h`, 'info', 4000); return; }
     }
-
-    // Validate
     if (!chosenRating) { showToast('⚠️ Please select a rating!', 'error'); return; }
     const reviewText = $('#reviewText')?.value.trim() || '';
     if (!reviewText) { showToast('⚠️ Please write a review!', 'error'); return; }
     if (reviewText.length > 500) { showToast('⚠️ Review too long (max 500 chars)', 'error'); return; }
-
     const name     = $('#reviewerName')?.value.trim() || '';
     const emailVal = $('#reviewerEmail')?.value.trim() || '';
     if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
       showToast('⚠️ If providing email, enter a valid address.', 'error'); return;
     }
-
     if (ratingSubmit) { ratingSubmit.classList.add('loading'); ratingSubmit.disabled = true; }
-
     try {
       const review = {
         rating: chosenRating, name: name || 'Anonymous', email: emailVal || null,
@@ -665,19 +657,13 @@ function initRatingSystem() {
       };
       saveReview(review);
       localStorage.setItem(RATE_LIMIT_K, Date.now().toString());
-
-      // Fire-and-forget — does not block the success UI
-      notifyBackend({ name: review.name, email: review.email, rating: review.rating, message: review.text })
-        .catch(() => {});
-
+      notifyBackend({ name: review.name, email: review.email, rating: review.rating, message: review.text }).catch(() => {});
       showToast('🌟 Thank you for your rating!', 'success', 4200);
-
       ratingForm.reset();
       $$('.rating-num').forEach(b => { b.classList.remove('selected'); b.setAttribute('aria-pressed', 'false'); });
       chosenRating = 0;
       if (selRating) selRating.value = '';
       if (ratingHint) { ratingHint.textContent = 'Select a number above'; ratingHint.classList.remove('selected-hint'); }
-
       renderStats();
     } finally {
       if (ratingSubmit) { ratingSubmit.classList.remove('loading'); ratingSubmit.disabled = false; }
