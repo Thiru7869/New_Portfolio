@@ -617,10 +617,9 @@ body.light-mode .hero-grid { opacity:0.35; }
   display: block;
   font-size: clamp(42px, 6vw, 72px);
   font-weight: 900;
-  color: var(--text-1);   /* single solid colour — no gradient */
+  color: var(--text-1);
   line-height: 1.05;
   letter-spacing: -2px;
-  /* Remove any gradient overrides from previous versions */
   background: none;
   -webkit-background-clip: unset;
   -webkit-text-fill-color: unset;
@@ -787,12 +786,30 @@ a.skill-card { cursor:pointer; }
 .intern-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px,1fr)); gap:20px; }
 .intern-card { background:var(--bg-card); border:1px solid var(--border); border-top:2px solid var(--accent); border-radius:var(--radius); box-shadow:var(--shadow-xs); transition:border-color 0.22s, box-shadow 0.22s; overflow:hidden; }
 .intern-card:hover { border-color:var(--border-hover); box-shadow:var(--shadow-md); }
-.intern-card-header { display:flex; align-items:center; gap:14px; padding:18px 18px 0; }
+.intern-card-header {
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:18px 18px 0;
+  flex-wrap:nowrap; /* FIX: prevent arrow from wrapping to next line */
+}
 .intern-icon-wrap { width:42px; height:42px; border-radius:var(--radius-sm); background:var(--accent-subtle); border:1px solid var(--border-accent); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
-.intern-info { flex:1; }
-.intern-info h3 { font-size:15px; color:var(--text-1); margin-bottom:3px; line-height:1.3; }
+.intern-info { flex:1; min-width:0; /* FIX: allow text to shrink without pushing arrow */ }
+.intern-info h3 { font-size:15px; color:var(--text-1); margin-bottom:3px; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; /* FIX: prevent long titles from displacing arrow */ }
 .intern-company { font-size:11px; color:var(--accent); font-weight:700; letter-spacing:0.5px; text-transform:uppercase; font-family:'Space Mono',monospace; }
-.intern-toggle { width:32px; height:32px; border-radius:50%; background:transparent; border:1px solid var(--border); color:var(--text-2); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:var(--transition); flex-shrink:0; }
+.intern-toggle {
+  width:32px; height:32px;
+  border-radius:50%;
+  background:transparent;
+  border:1px solid var(--border);
+  color:var(--text-2);
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:var(--transition);
+  flex-shrink:0; /* FIX: ensure toggle never shrinks or wraps */
+  align-self:center; /* FIX: vertically centre arrow relative to header */
+  margin-left:auto; /* FIX: push arrow to the far right */
+}
 .intern-toggle:hover { border-color:var(--accent); color:var(--accent); }
 .intern-toggle svg { width:13px; height:13px; transition:transform 0.3s ease; }
 .intern-card.expanded .intern-toggle svg { transform:rotate(180deg); }
@@ -1073,8 +1090,13 @@ body.light-mode .intern-details-inner { background:var(--bg-3); }
   .skills-grid { grid-template-columns:repeat(2,1fr); gap:10px; }
   .skill-card { padding:18px 12px; }
   .intern-grid { grid-template-columns:repeat(2,1fr) !important; gap:12px; }
-  .intern-card-header { flex-wrap:wrap; gap:10px; }
-  .intern-info h3 { font-size:13px; }
+  /* FIX: tighten the card header so the arrow stays on the same row */
+  .intern-card-header { gap:8px; padding:14px 14px 0; }
+  .intern-icon-wrap { width:36px; height:36px; font-size:17px; }
+  .intern-info h3 { font-size:12px; }
+  .intern-company { font-size:10px; }
+  .intern-toggle { width:28px; height:28px; }
+  .intern-toggle svg { width:11px; height:11px; }
   .projects-grid { grid-template-columns:repeat(2,1fr) !important; gap:12px; }
   .project-img { height:110px; }
   .project-body { padding:14px; }
@@ -1102,12 +1124,16 @@ body.light-mode .intern-details-inner { background:var(--bg-3); }
   .section-title { font-size:24px; }
   .container { padding:0 18px; }
   .intern-grid { grid-template-columns:repeat(2,1fr) !important; gap:10px; }
+  /* FIX: further compact header for very small screens */
+  .intern-card-header { gap:6px; padding:12px 12px 0; }
+  .intern-icon-wrap { width:30px; height:30px; font-size:14px; }
+  .intern-info h3 { font-size:11px; }
+  .intern-company { font-size:9px; }
+  .intern-toggle { width:26px; height:26px; }
+  .intern-toggle svg { width:10px; height:10px; }
   .projects-grid { grid-template-columns:repeat(2,1fr) !important; gap:10px; }
   .contact-options { grid-template-columns:repeat(2,1fr) !important; gap:8px; }
   .footer-grid { grid-template-columns:repeat(2,1fr) !important; gap:18px; }
-  .intern-info h3 { font-size:12px; }
-  .intern-company { font-size:10px; }
-  .intern-icon-wrap { width:36px; height:36px; font-size:16px; }
   .rating-num { width:28px; height:28px; }
   .exp-achievements-row { grid-template-columns:repeat(2,1fr); }
   .about-stats { grid-template-columns:repeat(3,1fr); }
@@ -1148,17 +1174,40 @@ body.light-mode .intern-details-inner { background:var(--bg-3); }
   .nav-close-btn { display: flex; }
 }
 
-/* ── SKILL TAG (Soft Skills) ───────────────────────────────── */
+/* ══════════════════════════════════════════════════════════
+   SOFT SKILLS — SKILL TAG
+   FIX: Replaced hardcoded colour overrides with CSS variables
+   so the tag is readable in both dark (default) and light modes.
+   Previous code used body.dark-mode which was the wrong class
+   (portfolio uses body.light-mode), and hardcoded #f1f1f1/#333
+   produced poor contrast on light-mode card backgrounds.
+══════════════════════════════════════════════════════════ */
 .skill-tag {
-  font-size: 9px;
-  font-weight: 600;
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 5px;
+  margin-top: 6px;
+  /* Use CSS variables — adapts automatically to light & dark mode */
+  background: var(--accent-subtle);
   color: var(--accent);
-  opacity: 0.75;
-  margin-top: 4px;
-  display: block;
+  border: 1px solid var(--border-accent);
+  opacity: 1;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
+
+/* Brighten tag on card hover for better interactivity */
+.soft-card:hover .skill-tag {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  opacity: 1;
+}
+
+/* ── SOFT SKILL CARD ───────────────────────────────────────── */
 .soft-card {
   cursor: pointer;
   border: none;
@@ -1167,7 +1216,6 @@ body.light-mode .intern-details-inner { background:var(--bg-3); }
   transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s;
 }
 .soft-card:hover { transform: translateY(-6px) scale(1.04); }
-.soft-card:hover .skill-tag { opacity: 1; }
 
 /* ── SOFT SKILL MODAL ──────────────────────────────────────── */
 .soft-skill-modal {
@@ -1200,25 +1248,117 @@ body.light-mode .intern-details-inner { background:var(--bg-3); }
 .soft-skill-modal-close {
   position: absolute; top: 16px; right: 16px;
   background: rgba(79,142,247,0.1); border: 1px solid rgba(79,142,247,0.2);
-  border-radius: 8px; color: var(--text-secondary);
+  border-radius: 8px; color: var(--text-2);
   width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: background 0.2s, color 0.2s;
 }
 .soft-skill-modal-close:hover { background: rgba(79,142,247,0.25); color: var(--accent); }
 .ssm-header { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
 .ssm-emoji { font-size: 42px; }
-.ssm-title { font-size: 26px; font-weight: 800; color: var(--text-primary); margin: 0; }
+.ssm-title { font-size: 26px; font-weight: 800; color: var(--text-1); margin: 0; }
 .ssm-section { margin-bottom: 24px; }
 .ssm-section h3 {
   font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
   color: var(--accent); margin-bottom: 10px;
 }
-.ssm-section p { color: var(--text-secondary); line-height: 1.75; font-size: 14px; }
+.ssm-section p { color: var(--text-2); line-height: 1.75; font-size: 14px; }
 .ssm-section ul { padding-left: 20px; }
-.ssm-section ul li { color: var(--text-secondary); font-size: 14px; line-height: 1.65; margin-bottom: 6px; }
+.ssm-section ul li { color: var(--text-2); font-size: 14px; line-height: 1.65; margin-bottom: 6px; }
 .ssm-improve { background: rgba(79,142,247,0.06); border: 1px solid rgba(79,142,247,0.15); border-radius: 12px; padding: 18px 20px; }
 @media (max-width: 600px) {
   .soft-skill-modal-inner { padding: 28px 20px; }
   .ssm-title { font-size: 20px; }
   .ssm-emoji { font-size: 32px; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   FIX 1 — SOFT SKILL DIALOG: LIGHT MODE COLOURS
+   The modal inner shell used hardcoded dark hex values
+   (#0f1a2e / #111827) that never adapt to light mode.
+   These scoped overrides switch it to a clean white card
+   with dark text — no other styles are touched.
+══════════════════════════════════════════════════════════ */
+body.light-mode .soft-skill-modal-backdrop {
+  background: rgba(15, 30, 60, 0.55); /* softer scrim so white modal pops */
+}
+
+body.light-mode .soft-skill-modal-inner {
+  background: #ffffff;                         /* clean white card */
+  border: 1px solid #dde4f0;                   /* matches --border in light mode */
+  box-shadow: 0 24px 64px rgba(10, 20, 50, 0.18);
+}
+
+body.light-mode .soft-skill-modal-close {
+  background: rgba(37, 99, 235, 0.07);
+  border-color: rgba(37, 99, 235, 0.2);
+  color: #475d78;                              /* --text-2 light */
+}
+body.light-mode .soft-skill-modal-close:hover {
+  background: rgba(37, 99, 235, 0.14);
+  color: #2563eb;                              /* --accent light */
+}
+
+/* Header title & emoji — inherit var(--text-1) which is already dark in light mode */
+body.light-mode .ssm-title {
+  color: #0d1526;                              /* --text-1 light, explicit for safety */
+}
+
+/* Section headings already use var(--accent) — fine in both modes */
+
+/* Body text */
+body.light-mode .ssm-section p,
+body.light-mode .ssm-section ul li {
+  color: #475d78;                              /* --text-2 light */
+}
+
+/* "How I apply this" highlight box */
+body.light-mode .ssm-improve {
+  background: rgba(37, 99, 235, 0.05);
+  border-color: rgba(37, 99, 235, 0.18);
+}
+
+/* Scrollbar tint inside the modal */
+body.light-mode .soft-skill-modal-inner::-webkit-scrollbar-thumb {
+  background: #dde4f0;
+}
+body.light-mode .soft-skill-modal-inner {
+  scrollbar-color: #dde4f0 transparent;
+}
+
+/* ══════════════════════════════════════════════════════════
+   FIX 2 — INTERNSHIP CARDS: MOBILE ALIGNMENT POLISH
+   Supplements the flex-wrap / min-width fixes from the
+   previous session. Ensures the preview text, tags, and
+   expanded panel also sit cleanly inside narrow 2-col cards.
+══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  /* Card itself — prevent any horizontal overflow */
+  .intern-card { overflow: hidden; }
+
+  /* Preview text — clamp to 3 lines so cards stay even height */
+  .intern-preview {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    padding: 10px 14px 8px;
+    font-size: 12px;
+  }
+
+  /* Tags row — tighter spacing so pills don't spill */
+  .intern-tags { padding: 0 14px 12px; gap: 4px; }
+  .intern-tags span { font-size: 9px; padding: 2px 7px; }
+
+  /* Expanded details panel — reduce padding on narrow cards */
+  .intern-details-inner { padding: 12px 14px 14px; }
+  .intern-details-inner h4 { font-size: 9px; margin: 10px 0 5px; }
+  .intern-details-inner p { font-size: 12px; margin-bottom: 10px; }
+  .intern-detail-tags span { font-size: 9px; padding: 2px 8px; }
+}
+
+@media (max-width: 480px) {
+  /* Even tighter on very small phones */
+  .intern-preview { padding: 8px 12px 6px; font-size: 11px; }
+  .intern-tags { padding: 0 12px 10px; }
+  .intern-details-inner { padding: 10px 12px 12px; }
 }
