@@ -1,33 +1,28 @@
 require("dotenv").config();
-
 const express = require("express");
 const cors = require("cors");
 
 const { connectDB } = require("./config/db");
 const reviewRoutes = require("./routes/reviewRoutes");
 const { globalLimiter } = require("./middleware/rateLimiter");
-const { verifyConnection } = require("./config/mailConfig");
+const { transporter, verifyConnection } = require("./config/mailConfig");
 
 const app = express();
 
 // =============================
-// BASIC MIDDLEWARE
+// MIDDLEWARE
 // =============================
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // =============================
 // CORS CONFIG
 // =============================
-
 const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
   "http://localhost:5500",
   "http://127.0.0.1:5500",
-  "http://localhost:5501",
-  "http://127.0.0.1:5501",
   process.env.FRONTEND_URL
 ];
 
@@ -35,12 +30,8 @@ app.use(
   cors({
     origin: function (origin, callback) {
       if (!origin) return callback(null, true);
-
-      if (allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS not allowed"));
-      }
+      if (allowedOrigins.indexOf(origin) !== -1) callback(null, true);
+      else callback(new Error("CORS not allowed"));
     },
     credentials: true,
   })
@@ -49,29 +40,24 @@ app.use(
 // =============================
 // RATE LIMITER
 // =============================
-
 app.use(globalLimiter);
 
 // =============================
 // REQUEST LOGGER
 // =============================
-
 app.use((req, res, next) => {
-  const now = new Date().toISOString();
-  console.log(`[${now}] ${req.method} ${req.url}`);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   next();
 });
 
 // =============================
 // API ROUTES
 // =============================
-
 app.use("/api/review", reviewRoutes);
 
 // =============================
 // HEALTH CHECK
 // =============================
-
 app.get("/", (req, res) => {
   res.json({
     status: "Portfolio Backend Running",
@@ -83,21 +69,39 @@ app.get("/", (req, res) => {
 });
 
 // =============================
+// TEST EMAIL ENDPOINT
+// =============================
+app.get("/api/test-email", async (req, res) => {
+  try {
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: process.env.ADMIN_EMAIL,
+      subject: "Test Email from Portfolio",
+      text: "Hello! This is a test email from your portfolio backend.",
+    });
+    res.send("✅ Test email sent successfully!");
+  } catch (err) {
+    console.error("❌ Test email failed:", err.message);
+    res.status(500).send("❌ Email failed");
+  }
+});
+
+// =============================
 // START SERVER
 // =============================
-
 const PORT = process.env.PORT || 5000;
 
 async function startServer() {
   try {
-    // MongoDB
     await connectDB();
     console.log("✅ MongoDB connected");
 
-    // SMTP check
-    await verifyConnection();
+    try {
+      await verifyConnection();
+    } catch (err) {
+      console.warn("⚠️ SMTP verification failed (ignored on Render)");
+    }
 
-    // Start server
     app.listen(PORT, "0.0.0.0", () => {
       console.log(`
 ╔══════════════════════════════════════════════╗
@@ -107,7 +111,6 @@ async function startServer() {
 ║  Mode  : ${process.env.NODE_ENV}
 ║  Email : ${process.env.EMAIL_USER}
 ╚══════════════════════════════════════════════╝
-
 🚀 API ready on port ${PORT}
 `);
     });
