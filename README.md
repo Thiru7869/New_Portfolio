@@ -1,188 +1,281 @@
-# Thirumala Narasimha Poluru — Portfolio
+# Thirumala Narasimha Poluru — Full-Stack Portfolio
 
-A personal portfolio website with a Node.js/Express backend for collecting reviews and sending email notifications, backed by MongoDB Atlas.
+![Node](https://img.shields.io/badge/Node.js-18+-green)
+![Express](https://img.shields.io/badge/Express.js-Backend-black)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)
+![Render](https://img.shields.io/badge/Deployment-Render-blue)
+![License](https://img.shields.io/badge/License-MIT-orange)
+
+A **full-stack personal portfolio website** built with **Node.js, Express, MongoDB Atlas, and a modern frontend**.
+The backend provides APIs for storing user reviews and sending email notifications, while the frontend delivers a clean and responsive portfolio interface.
 
 ---
 
-## Project Structure
+# Live Demo
 
+Frontend Website
+https://new-portfolio-1-ba0l.onrender.com
+
+Backend API
+https://new-portfolio-a8mf.onrender.com
+
+---
+
+# Features
+
+• Responsive portfolio website
+• Review submission system
+• MongoDB database storage
+• Email notification system
+• Rate-limited API for spam protection
+• Secure environment variable configuration
+• Full deployment on Render cloud platform
+
+---
+
+# Project Architecture
+
+```text
+User Browser
+     │
+     ▼
+Frontend (HTML / CSS / JS)
+     │
+     ▼
+Node.js Express API
+     │
+     ▼
+MongoDB Atlas Database
+     │
+     ▼
+Email Notification (Gmail SMTP)
 ```
+
+---
+
+# Project Structure
+
+```text
 portfolio-project/
 │
-├── frontend/                   ← Static site (GitHub Pages)
+├── frontend/
 │   ├── css/
 │   │   └── style.css
 │   ├── js/
-│   │   ├── main.js             ← Core frontend logic + review system
-│   │   └── download.js         ← CV download animation
+│   │   ├── main.js
+│   │   └── download.js
 │   └── index.html
 │
-├── backend/                    ← Node.js API (Render)
+├── backend/
 │   ├── config/
-│   │   ├── db.js               ← MongoDB Atlas connection
-│   │   └── mailConfig.js       ← Nodemailer / Gmail SMTP
+│   │   ├── db.js
+│   │   └── mailConfig.js
 │   ├── controllers/
-│   │   └── reviewController.js ← POST (save + email) & GET reviews
+│   │   └── reviewController.js
 │   ├── models/
-│   │   └── Review.js           ← Mongoose schema
+│   │   └── Review.js
 │   ├── routes/
-│   │   └── reviewRoutes.js     ← Express router
+│   │   └── reviewRoutes.js
 │   ├── middleware/
-│   │   └── rateLimiter.js      ← Per-IP + global rate limits
-│   ├── server.js               ← Entry point
+│   │   └── rateLimiter.js
+│   ├── server.js
 │   ├── package.json
-│   └── .env.example            ← Copy to .env and fill in values
+│   └── .env.example
 │
 └── README.md
 ```
 
 ---
 
-## API Endpoints
+# API Endpoints
 
-| Method | Path               | Description                        |
-|--------|--------------------|------------------------------------|
-| POST   | `/api/review`      | Submit a review (saves to DB + email) |
-| GET    | `/api/review`      | Fetch paginated reviews from DB    |
-| GET    | `/api/review/health` | Route health check               |
-| GET    | `/`                | Service health check               |
+| Method | Endpoint           | Description            |
+| ------ | ------------------ | ---------------------- |
+| POST   | /api/review        | Submit review          |
+| GET    | /api/review        | Fetch reviews          |
+| GET    | /api/review/health | API health check       |
+| GET    | /                  | Backend service status |
 
-### POST `/api/review` — Request Body
+---
+
+# Example Review Request
 
 ```json
 {
-  "name":    "John Doe",
-  "email":   "john@example.com",
-  "rating":  9,
-  "message": "Outstanding portfolio! Clean design and solid projects."
+  "name": "John Doe",
+  "email": "john@example.com",
+  "rating": 9,
+  "message": "Excellent portfolio design and projects."
 }
 ```
 
-### GET `/api/review` — Query Params
-
-| Param   | Default | Description              |
-|---------|---------|--------------------------|
-| `page`  | `1`     | Page number              |
-| `limit` | `20`    | Reviews per page (max 50)|
-
 ---
 
-## Local Development
+# Local Development Setup
 
-### Prerequisites
-
-- Node.js ≥ 18
-- A MongoDB Atlas account (free tier is fine)
-- A Gmail account with 2FA + an App Password
-
-### 1 — Clone & install
+## Clone Repository
 
 ```bash
-git clone https://github.com/thiru7869/your-portfolio.git
+git clone https://github.com/Thiru7869/New_Portfolio.git
 cd portfolio-project/backend
+```
+
+## Install Dependencies
+
+```bash
 npm install
 ```
 
-### 2 — Configure environment
+## Configure Environment Variables
+
+Create `.env` file inside backend folder.
+
+Example:
+
+```env
+PORT=5000
+NODE_ENV=development
+MONGO_URI=your_mongodb_connection
+EMAIL_SERVICE=gmail
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password
+ADMIN_EMAIL=your_email@gmail.com
+FRONTEND_URL=http://localhost:5500
+```
+
+## Run Backend
 
 ```bash
-cp .env.example .env
-# Edit .env with your real values (MONGO_URI, EMAIL_USER, EMAIL_PASS, etc.)
+npm run dev
 ```
 
-### 3 — Start the server
+or
 
 ```bash
-npm run dev   # uses nodemon, auto-restarts on file changes
-# or
-npm start     # plain node
+npm start
 ```
 
-### 4 — Run the frontend
+Server runs on:
 
-Open `frontend/index.html` with VS Code Live Server (port 5500) or any static server.
+```
+http://localhost:5000
+```
 
 ---
 
-## Deployment — Render (Backend)
+# Deployment
 
-### Step 1: Create a Render Web Service
+## Backend Deployment (Render Web Service)
 
-1. Push the `backend/` folder to a GitHub repo (or the whole monorepo).
-2. Go to [render.com](https://render.com) → **New** → **Web Service**.
-3. Connect your GitHub repo.
-4. Set the configuration:
-
-   | Field             | Value                          |
-   |-------------------|--------------------------------|
-   | **Root Directory**| `backend`                      |
-   | **Build Command** | `npm install`                  |
-   | **Start Command** | `npm start`                    |
-   | **Node Version**  | `18` (set in Environment)      |
-
-### Step 2: Add Environment Variables
-
-In the Render dashboard → **Environment** → add each variable from `.env.example`:
+Root Directory
 
 ```
-PORT             = 10000          (Render assigns this automatically)
-NODE_ENV         = production
-MONGO_URI        = mongodb+srv://...
-EMAIL_USER       = your@gmail.com
-EMAIL_PASS       = your-app-password
-EMAIL_RECIPIENT  = your@gmail.com
-FRONTEND_URL     = https://thiru7869.github.io
+backend
 ```
 
-> **PORT**: Render injects `PORT` automatically. Your server reads `process.env.PORT || 5000` so it works in both environments.
+Build Command
 
-### Step 3: Update BACKEND_URL in main.js
-
-After deployment, copy your Render service URL (e.g. `https://portfolio-backend-xxxx.onrender.com`) and update line ~11 in `frontend/js/main.js`:
-
-```js
-: 'https://portfolio-backend-xxxx.onrender.com'; // ← replace this
+```
+npm install
 ```
 
-Then push the change to GitHub Pages.
+Start Command
+
+```
+node server.js
+```
+
+Environment Variables
+
+```
+PORT
+NODE_ENV
+MONGO_URI
+EMAIL_SERVICE
+EMAIL_USER
+EMAIL_PASS
+ADMIN_EMAIL
+FRONTEND_URL
+```
 
 ---
 
-## Deployment — GitHub Pages (Frontend)
+## Frontend Deployment (Render Static Site)
 
-```bash
-# From the repo root
-git subtree push --prefix frontend origin gh-pages
+Root Directory
+
+```
+frontend
 ```
 
-Or configure GitHub Pages in repo Settings → Pages → Source: `gh-pages` branch.
+Build Command
+
+```
+(empty)
+```
+
+Publish Directory
+
+```
+.
+```
 
 ---
 
-## MongoDB Atlas Setup
+# MongoDB Atlas Setup
 
-1. Create a free cluster at [mongodb.com/atlas](https://www.mongodb.com/atlas).
-2. Create a database user with read/write permissions.
-3. Whitelist `0.0.0.0/0` in Network Access (Render IPs change dynamically).
-4. Copy the connection string and set it as `MONGO_URI` in `.env`.
+1. Create free cluster
+2. Create database user
+3. Allow network access:
 
-> The database `portfolio_reviews` and collection `reviews` are created automatically by Mongoose on first write.
+```
+0.0.0.0/0
+```
 
----
-
-## Security Notes
-
-- Rate limited: **5 reviews / IP / hour** (backend) + client-side 24 h localStorage lock
-- All user input sanitized with `validator.js` before saving
-- IP addresses stored in MongoDB for abuse detection, never exposed via API
-- CORS whitelist restricts API access to known frontend origins
-- `.env` is in `.gitignore` — never committed
+4. Copy connection string to `MONGO_URI`.
 
 ---
 
-## Gmail App Password Setup
+# Security Features
 
-1. Enable 2-Step Verification on your Google account.
-2. Go to [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords).
-3. Create an App Password for **Mail** → **Other (Custom name)** → `Portfolio Backend`.
-4. Copy the 16-character password (no spaces) into `EMAIL_PASS` in `.env`.
+• API rate limiting
+• Input validation using validator.js
+• Environment variable protection
+• MongoDB Atlas cloud security
+• CORS protection
+
+---
+
+# Technologies Used
+
+Frontend
+HTML
+CSS
+JavaScript
+
+Backend
+Node.js
+Express.js
+
+Database
+MongoDB Atlas
+
+Deployment
+Render Cloud Platform
+
+---
+
+# Author
+
+Thirumala Narasimha Poluru
+Computer Science Engineer
+Frontend & Full-Stack Developer
+
+GitHub
+https://github.com/Thiru7869
+
+---
+
+# License
+
+This project is licensed under the MIT License.
