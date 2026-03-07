@@ -71,19 +71,18 @@ app.get("/", (req, res) => {
 // =============================
 // TEST EMAIL ENDPOINT
 // =============================
-app.get("/api/test-email", async (req, res) => {
-  try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.ADMIN_EMAIL,
-      subject: "Test Email from Portfolio",
-      text: "Hello! This is a test email from your portfolio backend.",
+app.get("/api/test-email", (req, res) => {
+  transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: process.env.ADMIN_EMAIL,
+    subject: "Test Email from Portfolio",
+    text: "Hello! This is a test email from your portfolio backend.",
+  })
+    .then(() => res.send("✅ Test email sent successfully!"))
+    .catch(err => {
+      console.error("❌ Test email failed:", err.message);
+      res.status(500).send("❌ Email failed");
     });
-    res.send("✅ Test email sent successfully!");
-  } catch (err) {
-    console.error("❌ Test email failed:", err.message);
-    res.status(500).send("❌ Email failed");
-  }
 });
 
 // =============================
@@ -96,24 +95,26 @@ async function startServer() {
     await connectDB();
     console.log("✅ MongoDB connected");
 
-    try {
-      await verifyConnection();
-    } catch (err) {
-      console.warn("⚠️ SMTP verification failed (ignored on Render)");
-    }
-
-    app.listen(PORT, "0.0.0.0", () => {
+    const server = app.listen(PORT, "0.0.0.0", () => {
       console.log(`
 ╔══════════════════════════════════════════════╗
 ║     Portfolio Backend Server — Started       ║
 ╠══════════════════════════════════════════════╣
 ║  Port  : ${PORT}
-║  Mode  : ${process.env.NODE_ENV}
+║  Mode  : ${process.env.NODE_ENV || "development"}
 ║  Email : ${process.env.EMAIL_USER}
 ╚══════════════════════════════════════════════╝
 🚀 API ready on port ${PORT}
 `);
     });
+
+    // Verify mail connection asynchronously (non-blocking)
+    verifyConnection()
+      .then(() => console.log("✅ SMTP mail server verified"))
+      .catch(err =>
+        console.warn("⚠️ SMTP verification failed (ignored on Render):", err.message)
+      );
+
   } catch (error) {
     console.error("❌ Server failed to start");
     console.error(error);
