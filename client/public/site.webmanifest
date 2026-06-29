@@ -1,0 +1,17 @@
+{
+  "name": "Thirumala Narasimha Poluru — Portfolio",
+  "short_name": "Thiru Portfolio",
+  "description": "Full Stack Developer & Data Scientist — React, Node.js, Python, AWS",
+  "start_url": "/New_Portfolio/",
+  "display": "browser",
+  "theme_color": "#2563eb",
+  "background_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

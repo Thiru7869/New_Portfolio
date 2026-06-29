@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create *)",
+      "PowerShell(npm *)",
+      "PowerShell(Receive-Job *)",
+      "PowerShell(Get-ChildItem -Path \"E:\\\\New_Portfolio-main\" -Recurse -Name | Where-Object { $_ -match \"\\\\.\\(html|js|jsx|json\\)$\" -and $_ -notmatch \"node_modules|dist|\\\\.git\" } | Sort-Object)",
+      "PowerShell(New-Item *)",
+      "PowerShell(npm run *)"
+    ]
+  }
+}
